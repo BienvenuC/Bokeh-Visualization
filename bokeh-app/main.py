@@ -1,38 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# # INTERACTIVE VISUALIZATION
-# By <a href="https://www.linkedin.com/in/bienvenu-choupo" target="_blank">Bienvenu CHOUPO</a>  
-# 21 September 2019
-
-# Remember the automobile data set and the exploratory analysis we made?  
-# You can check it <a href="https://bienvenuc.github.io/MyProjects/EDA_cars.html" target="_blank">here</a>
-# <p>We saw that the best predictors of the price of a car were the following variables:</p>
-# 
-# Continuous numerical variables:
-# <ul>
-#     <li>Length</li>
-#     <li>Width</li>
-#     <li>Curb-weight</li>
-#     <li>Engine-size</li>
-#     <li>Horsepower</li>
-#     <li>City-mpg</li>
-#     <li>Highway-mpg</li>
-#     <li>Wheel-base</li>
-#     <li>Bore</li>
-# </ul>
-#     
-# Categorical variables:
-# <ul>
-#     <li>Drive-wheels</li>
-# </ul>
-
-# #### In this document we will create some interactive visualizations
-
-# In[1]:
-
-
-from bokeh.io import show,output_notebook
 from bokeh.plotting import figure
 from bokeh.models import ColumnDataSource
 from bokeh.models import CategoricalColorMapper
@@ -45,18 +10,6 @@ from bokeh.models import Button, Paragraph
 from scipy import stats # for pearsonr
 
 import pandas as pd
-
-#from bokeh.embed import components # export as html
-
-output_notebook()
-
-
-# ### Select and visualize the parameters in relation with each other  
-# ### For the selected parameters see the Pearson correlation and the P-value
-
-# In[2]:
-
-
 
 df=pd.read_csv("/Users/GodGiven/My_DataScience_Projects/My Notebooks/data/Auto_visual.csv")
 # Define the columndatasource
@@ -129,15 +82,3 @@ layout = row(widgetbox(x_select, y_select,output1,output2), plot)
 
 # add the layout to curdoc
 curdoc().add_root(layout)
-
-
-
-# In[3]:
-
-
-#show(modify_doc,notebook_url="http://localhost:10003")
-
-
-# As we now move into building machine learning models to automate our analysis, feeding the model with variables that meaningfully affect our target variable (price) will improve our model's prediction performance.
-
-# <h1>Thank you !!!</h1>
