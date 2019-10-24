@@ -1,0 +1,5 @@
+name: environment
+channels:
+  - defaults
+prefix: C:\Users\GodGiven\Anaconda3\envs\environment
+
