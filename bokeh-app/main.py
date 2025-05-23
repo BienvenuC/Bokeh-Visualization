@@ -3,19 +3,23 @@ from bokeh.plotting import figure
 from bokeh.models import ColumnDataSource
 from bokeh.models import CategoricalColorMapper
 from bokeh.palettes import Spectral6
-from bokeh.layouts import row,widgetbox
+from bokeh.layouts import row,column
 from bokeh.io import curdoc # for bokeh server
 from bokeh.models import Select # for Callback
-
-from bokeh.models import Paragraph
+from bokeh.models.widgets import Paragraph, PreText, Div
+#from bokeh.models import Paragraph
 from scipy import stats # for pearsonr
 
 import pandas as pd
 
 #from bokeh.embed import components # export as html
 
-#output_notebook()
+div = Div(text="""Do you remember our <a href="https://bienvenuc.github.io/MyProjects/EDA_cars.html"> Exploratory_Data_Analysis on Auto Data Set</a>? 
+          Here you can have some<b> Interactive Visualization</b>.
+           Feel free to <b>Select</b> the different <b>variables</b> you'd like to view, and you have the scatter plot along with Pearson Correlation and P-value. """,
+width=1000, height=50)
 
+#output_notebook()
 df=pd.read_csv(join(dirname(__file__), 'data/Auto_visual.csv'))
 # Define the columndatasource
 source = ColumnDataSource(data = {'x': df['length'],
@@ -29,15 +33,17 @@ drive_wheels_list = df.drive_wheels.unique().tolist()
 color_mapper = CategoricalColorMapper(factors=drive_wheels_list, palette=Spectral6)
 
 # Creating the plot
-plot = figure(plot_height=450 , plot_width=500, title="length vs price",sizing_mode='stretch_width')
+plot = figure(height=500 , width=300, title="length vs price",sizing_mode='stretch_width')
 
 # Add circle glyphs to the plot
-plot.circle(x='x', y='y', fill_alpha=0.9, source=source,
-            color={'field': 'drive_wheels','transform': color_mapper},legend='drive_wheels',line_width=5)
+plot.circle(x='x', y='y', fill_alpha=0.9, source=source, size=3,
+            color={'field': 'drive_wheels','transform': color_mapper},line_width=5, legend_field='drive_wheels')
 
 plot.xaxis.axis_label = 'length'
 plot.yaxis.axis_label = 'price'
-plot.legend.location = 'top_left'
+#plot.legend.location = 'top_left'
+
+Intro_text = PreText(text="WELCOME TO THE AUTO DATA SET INTERACTIVE VISUALIZATION WITH BOKEH",width=1000, height=25)
 
 # Create a dropdown Select widget for the x data: x_select
 option_list= ['length','width','curb_weight', 'engine_size', 'horsepower', 
@@ -52,9 +58,11 @@ y_select = Select(options=option_list, value='price',title='Select the y-axis da
 #button = Button(label="Get the Pearson correlation (Cor) and the P-value between the selected variables")
 output1 = Paragraph()
 output2 = Paragraph()
+
 pearson_coef, p_value = stats.pearsonr(df['length'], df['price'])
 output1.text = "Pearson Correlation = " + str(pearson_coef)
 output2.text = "P-value =  " + str(p_value)
+
 
 #Define the callback: update_plot
 def callback(attr, old, new):
@@ -83,8 +91,11 @@ x_select.on_change('value', callback)
 y_select.on_change('value', callback)
     
 # Create layout and add to current document
-layout = row(widgetbox(x_select, y_select,output1,output2), plot)
-
+#layout = column(div,row(widgetbox(x_select, y_select,output1,output2), plot))
+#layout = row(column(x_select, y_select,output1,output2), plot)
+layout = column(row(x_select, y_select,output1,output2), plot)
 # add the layout to curdoc
+curdoc().add_root(Intro_text)
+curdoc().add_root(div)
 curdoc().add_root(layout)
-
+#curdoc().add_root(plot)
